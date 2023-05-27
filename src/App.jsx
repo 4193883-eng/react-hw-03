@@ -22,6 +22,10 @@ export default function App() {
             return;
         }
 
+        if(name === ''){
+            return;
+        }
+
         setContacts((prevContacts) => {
             return [...prevContacts, {
                 name: name,
