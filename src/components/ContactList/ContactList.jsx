@@ -6,7 +6,7 @@ const MotionButton = motion(Button)
 
 export function ContactList({ contacts, filter, removeHandler }) {
     function search(contacts) {
-        if (filter == '') {
+        if (filter === '') {
             return contacts
         }
         return contacts.map((contact) => {
