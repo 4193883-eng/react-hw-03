@@ -9,12 +9,10 @@ export function ContactList({ contacts, filter, removeHandler }) {
         if (filter === '') {
             return contacts
         }
-        return contacts.map((contact) => {
+        return contacts.filter((contact) => {
             const lowerName = contact.name.toLowerCase()
             const lowerQuery = filter.toLowerCase()
-            if (lowerName.includes(lowerQuery)) {
-                return contact
-            }
+            return lowerName.includes(lowerQuery)
         })
     }
 

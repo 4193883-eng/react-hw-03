@@ -1,15 +1,25 @@
 import { useEffect, useState } from 'react'
 import { Heading, Stack, Text } from '@chakra-ui/react'
-import { nanoid } from 'nanoid'
 import { ContactForm } from './components/ContactForm/ContactForm.jsx'
 import { Filter } from './components/Filter/Filter.jsx'
 import { ContactList } from './components/ContactList/ContactList.jsx'
 import loadData from './localStorageHelper.js'
+import {
+    createContactService,
+    getAllContactsService,
+    removeContactService,
+} from './apiService.js'
 
 export default function App() {
     const [contacts, setContacts] = useState(loadData)
 
     const [filter, setFilter] = useState('')
+
+    useEffect(() => {
+        getAllContactsService().then((res) => {
+            setContacts(res.data)
+        })
+    }, [])
 
     useEffect(() => {
         localStorage.setItem('data', JSON.stringify(contacts))
@@ -24,15 +34,10 @@ export default function App() {
             return
         }
 
-        setContacts((prevContacts) => {
-            return [
-                ...prevContacts,
-                {
-                    name: name,
-                    number: number,
-                    id: nanoid(),
-                },
-            ]
+        createContactService(name, number).then((res) => {
+            setContacts((prevContacts) => {
+                return [...prevContacts, res.data]
+            })
         })
     }
 
@@ -46,12 +51,13 @@ export default function App() {
 
     function removeHandler(id) {
         setContacts((prevContacts) => {
+            removeContactService(id)
             return prevContacts.filter((contact) => contact.id !== id)
         })
     }
 
     return (
-        <Stack spacing={4} ml={8} mt={4} mr={8}>
+        <Stack spacing={4} ml={8} mt={4} mr={8} maxW={500}>
             <Heading>Phone Book</Heading>
             <ContactForm
                 addContactHandler={addContactHandler}
