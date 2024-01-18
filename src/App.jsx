@@ -3,27 +3,27 @@ import { Heading, Stack, Text } from '@chakra-ui/react'
 import { ContactForm } from './components/ContactForm/ContactForm.jsx'
 import { Filter } from './components/Filter/Filter.jsx'
 import { ContactList } from './components/ContactList/ContactList.jsx'
-import loadData from './localStorageHelper.js'
-import {
-    createContactService,
-    getAllContactsService,
-    removeContactService,
-} from './apiService.js'
+// import loadData from './localStorageHelper.js'
+// import {
+//     createContactService,
+//     getAllContactsService,
+//     removeContactService,
+// } from './apiService.js'
 
 export default function App() {
-    const [contacts, setContacts] = useState(loadData)
+    const [contacts, setContacts] = useState([])
 
     const [filter, setFilter] = useState('')
 
-    useEffect(() => {
-        getAllContactsService().then((res) => {
-            setContacts(res.data)
-        })
-    }, [])
-
-    useEffect(() => {
-        localStorage.setItem('data', JSON.stringify(contacts))
-    }, [contacts])
+    // useEffect(() => {
+    //     getAllContactsService().then((res) => {
+    //         setContacts(res.data)
+    //     })
+    // }, [])
+    //
+    // useEffect(() => {
+    //     localStorage.setItem('data', JSON.stringify(contacts))
+    // }, [contacts])
 
     function addContactHandler(name, number) {
         if (isNameAlreadyInUse(name)) {
@@ -34,11 +34,11 @@ export default function App() {
             return
         }
 
-        createContactService(name, number).then((res) => {
-            setContacts((prevContacts) => {
-                return [...prevContacts, res.data]
-            })
-        })
+        // createContactService(name, number).then((res) => {
+        //     setContacts((prevContacts) => {
+        //         return [...prevContacts, res.data]
+        //     })
+        // })
     }
 
     function isNameAlreadyInUse(name) {
@@ -51,7 +51,7 @@ export default function App() {
 
     function removeHandler(id) {
         setContacts((prevContacts) => {
-            removeContactService(id)
+            // removeContactService(id)
             return prevContacts.filter((contact) => contact.id !== id)
         })
     }
