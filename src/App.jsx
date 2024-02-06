@@ -1,8 +1,12 @@
-import { useEffect, useState } from 'react'
-import { Heading, Stack, Text } from '@chakra-ui/react'
-import { ContactForm } from './components/ContactForm/ContactForm.jsx'
-import { Filter } from './components/Filter/Filter.jsx'
-import { ContactList } from './components/ContactList/ContactList.jsx'
+import {useState} from 'react'
+import {Heading, Stack, Text} from '@chakra-ui/react'
+import {ContactForm} from './components/ContactForm/ContactForm.jsx'
+import {Filter} from './components/Filter/Filter.jsx'
+import {ContactList} from './components/ContactList/ContactList.jsx'
+import {useDispatch, useSelector} from "react-redux";
+import {createContactAction, removeContactAction} from "./redux/contacts/contactsActions.js";
+import {nanoid} from "@reduxjs/toolkit";
+import {contactsSelector} from "./redux/contacts/contactsSelectors.js";
 // import loadData from './localStorageHelper.js'
 // import {
 //     createContactService,
@@ -11,8 +15,8 @@ import { ContactList } from './components/ContactList/ContactList.jsx'
 // } from './apiService.js'
 
 export default function App() {
-    const [contacts, setContacts] = useState([])
-
+    const contacts = useSelector(contactsSelector)
+    const dispatch = useDispatch()
     const [filter, setFilter] = useState('')
 
     // useEffect(() => {
@@ -34,6 +38,13 @@ export default function App() {
             return
         }
 
+        dispatch(createContactAction(
+            {
+                name: name,
+                id: nanoid(),
+                number: number
+            }
+        ))
         // createContactService(name, number).then((res) => {
         //     setContacts((prevContacts) => {
         //         return [...prevContacts, res.data]
@@ -50,10 +61,8 @@ export default function App() {
     }
 
     function removeHandler(id) {
-        setContacts((prevContacts) => {
-            // removeContactService(id)
-            return prevContacts.filter((contact) => contact.id !== id)
-        })
+        console.log('removed', id)
+        dispatch(removeContactAction(id))
     }
 
     return (
@@ -64,7 +73,7 @@ export default function App() {
                 isNameAlreadyInUse={isNameAlreadyInUse}
             />
             <Text fontSize={'2xl'}>Contacts</Text>
-            <Filter filter={filter} filterChangeHandler={filterChangeHandler} />
+            <Filter filter={filter} filterChangeHandler={filterChangeHandler}/>
             <ContactList
                 contacts={contacts}
                 filter={filter}
